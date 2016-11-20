@@ -1,16 +1,12 @@
 # Material DateTime Picker - Select a time/date in style
 
-[![Join the chat at https://gitter.im/wdullaer/MaterialDateTimePicker](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wdullaer/MaterialDateTimePicker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![Maven Central](https://img.shields.io/maven-central/v/com.wdullaer/materialdatetimepicker.svg)
-
+## This is fork from https://github.com/wdullaer/MaterialDateTimePicker for who use SupportDialogFragment
 
 Material DateTime Picker tries to offer you the date and time pickers as shown in [the Material Design spec](http://www.google.com/design/spec/components/pickers.html), with an
 easy themable API.
 The library uses [the code from the Android frameworks](https://android.googlesource.com/platform/frameworks/opt/datetimepicker/) as a base and tweaked it to be as close as possible to Material Design example.
 
-Support for Android 4.0 and up.
-
-Feel free to fork or issue pull requests on github. Issues can be reported on the github issue tracker.
+Support for Android 2.3.3 and up.
 
 Date Picker | Time Picker
 ---- | ----
@@ -32,8 +28,15 @@ Date Picker | Time Picker
 ## Setup
 The easiest way to add the Material DateTime Picker library to your project is by adding it as a dependency to your `build.gradle`
 ```java
+allprojects {
+  repositories {
+    ...
+    maven { url "https://jitpack.io" }
+  }
+}
+
 dependencies {
-  compile 'com.wdullaer:materialdatetimepicker:2.5.0'
+  compile 'com.github.jarklee:MaterialDateTimePicker:v2.5.1'
 }
 ```
 
@@ -171,18 +174,6 @@ If set to `true` will dismiss the picker when the user selects a date. This defa
 Allows you to enable or disable a seconds and minutes picker ont he `TimepickerDialog`. Enabling the seconds picker, implies enabling the minutes picker. Disabling the minute picker will disable the seconds picker. The last applied setting will be used. By default `enableSeconds = false` and `enableMinutes = true`.
 
 ## FAQ
-
-### Why not use `SupportDialogFragment`?
-Not using the support library versions has been a well considered choice, based on the following considerations:
-
-* Less than 5% of the devices using the android market do not support native `Fragments`, a number which will decrease even further going forward.
-* Even if you use `SupportFragments` in your application, you can still use the normal `FragmentManager`
-
-This means that in the current setup everyone can use the library: people using the support library and people not using the support library.
-
-Finally changing to `SupportDialogFragment` now will break the API for all the people using this library.
-
-If you do really need `SupportDialogFragment`, you should fork the library. It involves changing all of 2 lines of code, so it should be easy enough to keep it up to date with the upstream.
 
 ### Why does the `DatePickerDialog` return the selected month -1?
 In the java `Calendar` class months use 0 based indexing: January is month 0, December is month 11. This convention is widely used in the java world, for example the native Android DatePicker.

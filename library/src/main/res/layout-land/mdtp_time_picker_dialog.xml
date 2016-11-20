@@ -21,7 +21,7 @@
     android:orientation="horizontal"
     android:background="@color/mdtp_background_color"
     android:focusable="true" >
-    <com.wdullaer.materialdatetimepicker.time.RadialPickerLayout
+    <com.jarklee.materialdatetimepicker.time.RadialPickerLayout
         android:id="@+id/time_picker"
         android:layout_width="@dimen/mdtp_picker_dimen"
         android:layout_height="@dimen/mdtp_time_picker_height"
