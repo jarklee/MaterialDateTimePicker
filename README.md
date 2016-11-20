@@ -1,6 +1,6 @@
 # Material DateTime Picker - Select a time/date in style
 
-## This is fork from https://github.com/wdullaer/MaterialDateTimePicker for who use SupportDialogFragment
+### This is fork from https://github.com/wdullaer/MaterialDateTimePicker for who use SupportDialogFragment
 
 Material DateTime Picker tries to offer you the date and time pickers as shown in [the Material Design spec](http://www.google.com/design/spec/components/pickers.html), with an
 easy themable API.
