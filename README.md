@@ -36,7 +36,7 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.github.jarklee:MaterialDateTimePicker:v2.5.1'
+  compile 'com.github.jarklee:MaterialDateTimePicker:2.5.1'
 }
 ```
 
