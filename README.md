@@ -1,5 +1,7 @@
 # Material DateTime Picker - Select a time/date in style
 
+[![](https://jitpack.io/v/jarklee/MaterialDateTimePicker.svg)](https://jitpack.io/#jarklee/MaterialDateTimePicker)
+
 ### This is fork from https://github.com/wdullaer/MaterialDateTimePicker for who use SupportDialogFragment
 
 Material DateTime Picker tries to offer you the date and time pickers as shown in [the Material Design spec](http://www.google.com/design/spec/components/pickers.html), with an
@@ -36,7 +38,7 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.github.jarklee:MaterialDateTimePicker:2.5.1'
+  compile 'com.github.jarklee:MaterialDateTimePicker:<version>'
 }
 ```
 
@@ -160,6 +162,8 @@ tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
     }
 });
 ```
+* `setLocale(Locale locale)`
+Set dialog date/time string locale. Default is device locale.
 
 * `vibrate(boolean vibrate)`  
 Set whether the dialogs should vibrate the device when a selection is made. This defaults to `true`.
