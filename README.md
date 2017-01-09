@@ -160,6 +160,8 @@ tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
     }
 });
 ```
+* `setLocale(Locale locale)`
+Set dialog date/time string locale. Default is device locale.
 
 * `vibrate(boolean vibrate)`  
 Set whether the dialogs should vibrate the device when a selection is made. This defaults to `true`.
