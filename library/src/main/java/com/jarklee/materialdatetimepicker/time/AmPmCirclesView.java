@@ -20,8 +20,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +30,7 @@ import com.jarklee.materialdatetimepicker.R;
 import com.jarklee.materialdatetimepicker.Utils;
 
 import java.text.DateFormatSymbols;
+import java.util.Locale;
 
 /**
  * Draw the two smaller AM and PM circles next to where the larger circle will be.
@@ -107,7 +108,7 @@ public class AmPmCirclesView extends View {
                 Float.parseFloat(res.getString(R.string.mdtp_circle_radius_multiplier));
         mAmPmCircleRadiusMultiplier =
                 Float.parseFloat(res.getString(R.string.mdtp_ampm_circle_radius_multiplier));
-        String[] amPmTexts = new DateFormatSymbols().getAmPmStrings();
+        String[] amPmTexts = new DateFormatSymbols(getLocale()).getAmPmStrings();
         mAmText = amPmTexts[0];
         mPmText = amPmTexts[1];
 
@@ -118,6 +119,16 @@ public class AmPmCirclesView extends View {
         mAmOrPmPressed = -1;
 
         mIsInitialized = true;
+    }
+
+    private Locale getLocale() {
+        return TimePickerSetting.getInstance().getLocale();
+    }
+
+    public void updateLocale() {
+        String[] amPmTexts = new DateFormatSymbols(getLocale()).getAmPmStrings();
+        mAmText = amPmTexts[0];
+        mPmText = amPmTexts[1];
     }
 
     public void setAmOrPm(int amOrPm) {
@@ -136,16 +147,16 @@ public class AmPmCirclesView extends View {
             return -1;
         }
 
-        int squaredYDistance = (int) ((yCoord - mAmPmYCenter)*(yCoord - mAmPmYCenter));
+        int squaredYDistance = (int) ((yCoord - mAmPmYCenter) * (yCoord - mAmPmYCenter));
 
         int distanceToAmCenter =
-                (int) Math.sqrt((xCoord - mAmXCenter)*(xCoord - mAmXCenter) + squaredYDistance);
+                (int) Math.sqrt((xCoord - mAmXCenter) * (xCoord - mAmXCenter) + squaredYDistance);
         if (distanceToAmCenter <= mAmPmCircleRadius && !mAmDisabled) {
             return AM;
         }
 
         int distanceToPmCenter =
-                (int) Math.sqrt((xCoord - mPmXCenter)*(xCoord - mPmXCenter) + squaredYDistance);
+                (int) Math.sqrt((xCoord - mPmXCenter) * (xCoord - mPmXCenter) + squaredYDistance);
         if (distanceToPmCenter <= mAmPmCircleRadius && !mPmDisabled) {
             return PM;
         }
@@ -167,7 +178,7 @@ public class AmPmCirclesView extends View {
             int circleRadius =
                     (int) (Math.min(layoutXCenter, layoutYCenter) * mCircleRadiusMultiplier);
             mAmPmCircleRadius = (int) (circleRadius * mAmPmCircleRadiusMultiplier);
-            layoutYCenter += mAmPmCircleRadius*0.75;
+            layoutYCenter += mAmPmCircleRadius * 0.75;
             int textSize = mAmPmCircleRadius * 3 / 4;
             mPaint.setTextSize(textSize);
 

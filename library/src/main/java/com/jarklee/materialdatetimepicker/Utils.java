@@ -21,15 +21,22 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+
+import java.util.Locale;
 
 /**
  * Utility helper functions for time and date pickers.
@@ -188,5 +195,23 @@ public class Utils {
         } finally {
             a.recycle();
         }
+    }
+
+    public static String getStringFromLocale(@NonNull Context context, @StringRes int strRes, Locale
+            locale) {
+        if (locale == null) {
+            return context.getString(strRes);
+        }
+        Resources standardResources = context.getResources();
+        AssetManager assets = standardResources.getAssets();
+        DisplayMetrics metrics = standardResources.getDisplayMetrics();
+        Configuration config = new Configuration(standardResources.getConfiguration());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            config.setLocale(locale);
+        } else {
+            config.locale = locale;
+        }
+        Resources defaultResources = new Resources(assets, metrics, config);
+        return defaultResources.getString(strRes);
     }
 }

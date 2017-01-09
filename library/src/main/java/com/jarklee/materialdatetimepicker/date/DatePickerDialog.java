@@ -19,6 +19,7 @@ package com.jarklee.materialdatetimepicker.date;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -98,8 +99,12 @@ public class DatePickerDialog extends DialogFragment implements
     private static final int ANIMATION_DURATION = 300;
     private static final int ANIMATION_DELAY = 500;
 
-    private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", Locale.getDefault());
-    private static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd", Locale.getDefault());
+    static {
+        DatePickerSetting.getInstance().updateLocale(Locale.getDefault());
+    }
+
+    public static SimpleDateFormat YEAR_FORMAT;
+    public static SimpleDateFormat DAY_FORMAT;
 
     private final Calendar mCalendar = trimToMidnight(Calendar.getInstance());
     private OnDateSetListener mCallBack;
@@ -116,6 +121,9 @@ public class DatePickerDialog extends DialogFragment implements
     private TextView mYearView;
     private DayPickerView mDayPickerView;
     private YearPickerView mYearPickerView;
+
+    private Button mOkButton;
+    private Button mCancelButton;
 
     private int mCurrentView = UNINITIALIZED;
 
@@ -135,9 +143,9 @@ public class DatePickerDialog extends DialogFragment implements
     private boolean mDismissOnPause = false;
     private boolean mAutoDismiss = false;
     private int mDefaultView = MONTH_AND_DAY_VIEW;
-    private int mOkResid = R.string.mdtp_ok;
+    private int mOkResid = android.R.string.ok;
     private String mOkString;
-    private int mCancelResid = R.string.mdtp_cancel;
+    private int mCancelResid = android.R.string.cancel;
     private String mCancelString;
 
     private HapticFeedbackController mHapticFeedbackController;
@@ -327,8 +335,8 @@ public class DatePickerDialog extends DialogFragment implements
         animation2.setDuration(ANIMATION_DURATION);
         mAnimator.setOutAnimation(animation2);
 
-        Button okButton = (Button) view.findViewById(R.id.ok);
-        okButton.setOnClickListener(new OnClickListener() {
+        mOkButton = (Button) view.findViewById(R.id.ok);
+        mOkButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -337,22 +345,23 @@ public class DatePickerDialog extends DialogFragment implements
                 dismiss();
             }
         });
-        okButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
-        if (mOkString != null) okButton.setText(mOkString);
-        else okButton.setText(mOkResid);
+        mOkButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
+        if (mOkString != null) mOkButton.setText(mOkString);
+        else mOkButton.setText(Utils.getStringFromLocale(getContext(), mOkResid, getLocale()));
 
-        Button cancelButton = (Button) view.findViewById(R.id.cancel);
-        cancelButton.setOnClickListener(new OnClickListener() {
+        mCancelButton = (Button) view.findViewById(R.id.cancel);
+        mCancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tryVibrate();
                 if (getDialog() != null) getDialog().cancel();
             }
         });
-        cancelButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
-        if (mCancelString != null) cancelButton.setText(mCancelString);
-        else cancelButton.setText(mCancelResid);
-        cancelButton.setVisibility(isCancelable() ? View.VISIBLE : View.GONE);
+        mCancelButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
+        if (mCancelString != null) mCancelButton.setText(mCancelString);
+        else
+            mCancelButton.setText(Utils.getStringFromLocale(getContext(), mCancelResid, getLocale()));
+        mCancelButton.setVisibility(isCancelable() ? View.VISIBLE : View.GONE);
 
         // If an accent color has not been set manually, get it from the context
         if (mAccentColor == -1) {
@@ -361,8 +370,8 @@ public class DatePickerDialog extends DialogFragment implements
         if (mDayOfWeekView != null)
             mDayOfWeekView.setBackgroundColor(Utils.darkenColor(mAccentColor));
         view.findViewById(R.id.day_picker_selected_date_layout).setBackgroundColor(mAccentColor);
-        okButton.setTextColor(mAccentColor);
-        cancelButton.setTextColor(mAccentColor);
+        mOkButton.setTextColor(mAccentColor);
+        mCancelButton.setTextColor(mAccentColor);
 
         if (getDialog() == null) {
             view.findViewById(R.id.done_background).setVisibility(View.GONE);
@@ -487,15 +496,15 @@ public class DatePickerDialog extends DialogFragment implements
 
     private void updateDisplay(boolean announce) {
         if (mDayOfWeekView != null) {
-            if (mTitle != null) mDayOfWeekView.setText(mTitle.toUpperCase(Locale.getDefault()));
+            if (mTitle != null) mDayOfWeekView.setText(mTitle.toUpperCase(getLocale()));
             else {
                 mDayOfWeekView.setText(mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG,
-                        Locale.getDefault()).toUpperCase(Locale.getDefault()));
+                        getLocale()).toUpperCase(getLocale()));
             }
         }
 
         mSelectedMonthTextView.setText(mCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-                Locale.getDefault()).toUpperCase(Locale.getDefault()));
+                getLocale()).toUpperCase(getLocale()));
         mSelectedDayTextView.setText(DAY_FORMAT.format(mCalendar.getTime()));
         mYearView.setText(YEAR_FORMAT.format(mCalendar.getTime()));
 
@@ -511,6 +520,41 @@ public class DatePickerDialog extends DialogFragment implements
             String fullDateText = DateUtils.formatDateTime(getActivity(), millis, flags);
             Utils.tryAccessibilityAnnounce(mAnimator, fullDateText);
         }
+    }
+
+    /**
+     * Set user custom locale
+     *
+     * @param locale user locale
+     */
+
+    public void setLocale(Locale locale) {
+        if (!DatePickerSetting.getInstance().updateLocale(locale)
+                || !isVisible()) {
+            return;
+        }
+        Context context = getContext();
+        if (context != null) {
+            if (mOkButton != null) {
+                if (mOkString != null) {
+                    mOkButton.setText(mOkString);
+                } else {
+                    mOkButton.setText(Utils.getStringFromLocale(getContext(), mOkResid, getLocale()));
+                }
+            }
+            if (mCancelButton != null) {
+                if (mCancelString != null) {
+                    mCancelButton.setText(mCancelString);
+                } else {
+                    mCancelButton.setText(Utils.getStringFromLocale(getContext(), mCancelResid, getLocale()));
+                }
+            }
+        }
+        updateDisplay(false);
+    }
+
+    public Locale getLocale() {
+        return DatePickerSetting.getInstance().getLocale();
     }
 
     /**

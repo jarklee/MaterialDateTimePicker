@@ -16,6 +16,7 @@ import com.jarklee.materialdatetimepicker.time.RadialPickerLayout;
 import com.jarklee.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
                         now.get(Calendar.MINUTE),
                         mode24Hours.isChecked()
                 );
+                tpd.setLocale(Locale.JAPAN);
                 tpd.setThemeDark(modeDarkTime.isChecked());
                 tpd.vibrate(vibrateTime.isChecked());
                 tpd.dismissOnPause(dismissTime.isChecked());
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
+                dpd.setLocale(Locale.JAPAN);
                 dpd.setThemeDark(modeDarkDate.isChecked());
                 dpd.vibrate(vibrateDate.isChecked());
                 dpd.dismissOnPause(dismissDate.isChecked());
