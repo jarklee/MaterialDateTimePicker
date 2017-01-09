@@ -154,6 +154,10 @@ public class TimePickerDialog extends DialogFragment implements
     private String mSecondPickerDescription;
     private String mSelectSeconds;
 
+    static {
+        TimePickerSetting.getInstance().updateLocale(Locale.getDefault());
+    }
+
     /**
      * The callback interface used to indicate the user is done filling in
      * the time (they clicked on the 'Set' button).

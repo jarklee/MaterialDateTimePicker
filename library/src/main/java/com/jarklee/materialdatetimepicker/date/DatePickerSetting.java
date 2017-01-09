@@ -22,6 +22,10 @@ public class DatePickerSetting {
     }
 
     private DatePickerSetting() {
+        SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", mLocale);
+        DatePickerDialog.YEAR_FORMAT = YEAR_FORMAT;
+        DayPickerView.YEAR_FORMAT = YEAR_FORMAT;
+        DatePickerDialog.DAY_FORMAT = new SimpleDateFormat("dd", mLocale);
     }
 
     private Locale mLocale = Locale.getDefault();

@@ -197,8 +197,8 @@ public class Utils {
         }
     }
 
-    public static String getStringFromLocale(@NonNull Context context, @StringRes int strRes, Locale
-            locale) {
+    public static String getStringFromLocale(@NonNull Context context,
+                                             @StringRes int strRes, Locale locale) {
         if (locale == null) {
             return context.getString(strRes);
         }
@@ -212,6 +212,10 @@ public class Utils {
             config.locale = locale;
         }
         Resources defaultResources = new Resources(assets, metrics, config);
-        return defaultResources.getString(strRes);
+        try {
+            return defaultResources.getString(strRes);
+        } catch (Exception e) {
+            return context.getString(strRes);
+        }
     }
 }
